@@ -1,12 +1,12 @@
-#A Deep Neural Network Approach To Parallel Sentence Extraction
+# A Deep Neural Network Approach To Parallel Sentence Extraction
 A TensorFlow implementation of the bidirectional RNN model described in the paper [A Deep Neural Network Approach To Parallel Sentence Extraction](https://arxiv.org/abs/1709.09783) to extract parallel sentences from aligned comparable corpora.
 
-##Required packages
-* TensorFlow ([instructions](https://www.tensorflow.org/install/))
-* NumPy ([instructions](https://www.scipy.org/install.html))
-* scikit-learn ([instructions](http://scikit-learn.org/stable/install.html))
+## Required packages
+* **TensorFlow** ([instructions](https://www.tensorflow.org/install/))
+* **NumPy** ([instructions](https://www.scipy.org/install.html))
+* **scikit-learn** ([instructions](http://scikit-learn.org/stable/install.html))
 
-##Prepare the training data
+## Prepare the training data
 We have provided a script to tokenize and clean your datasets using [Moses](https://github.com/moses-smt/mosesdecoder).
 ```
 ./scripts/preprocessing.sh ~/moses/mosesdecoder ../data/train en fr 3 80
@@ -14,14 +14,14 @@ mv ../data/train.clean.en ../data/train.en
 mv ../data/trainclean.fr ../data/train.fr
 ```
 
-##Training
+## Training
 Run the training script.
 ```
 python train.py --source_train_path ../data/train.en --target_train_path ../data/train.fr --source_valid_path ../data/valid.en --target_valid_path ../data/valid.fr --checkpoint_dir ../tflogs
 ```
 The models are written in `checkpoint_dir`.
 
-##Testing
+## Testing
 Run the evaluation script.
 ```
 python eval.py --checkpoint_dir ../tflogs --source_test_path ../data/test.en --target_test_path ../data/test.fr --reference_test_path ../data/test.ref --source_vocab_path ../data/vocabulary.source --target_vocab_path ../data/vocabulary.target
