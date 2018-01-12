@@ -36,16 +36,18 @@ tf.flags.DEFINE_string("checkpoint_dir", "./tflogs",
                        "Directory to save checkpoints and summaries of the model.")
 
 tf.flags.DEFINE_integer("source_vocab_size", 100000,
-                        "Keep most frequent words in source vocabulary.")
+                        "Number of the most frequent words to keep in the source "
+                        "vocabulary.")
 
 tf.flags.DEFINE_integer("target_vocab_size", 100000,
-                        "Keep most frequent words in target vocabulary.")
+                        "Number of the most frequent words to keep in target "
+                        "vocabulary.")
 
 tf.flags.DEFINE_float("learning_rate", 2e-4,
                       "Learning rate.")
 
 tf.flags.DEFINE_float("max_gradient_norm", 5.0,
-                      "Clip gradients to this norm.")
+                      "Clip gradient to this norm.")
 
 tf.flags.DEFINE_float("decision_threshold", 0.99,
                       "Decision threshold to predict a positive label.")
@@ -54,19 +56,22 @@ tf.flags.DEFINE_integer("embedding_size", 300,
                         "Size of each word embedding.")
 
 tf.flags.DEFINE_integer("state_size", 300,
-                        "Size of the recurrent states in the BiRNN encoder.")
+                        "Size of the recurrent state in the BiRNN encoder.")
 
 tf.flags.DEFINE_integer("hidden_size", 128,
-                        "Size of the hidden layer in the feed-forward neural network.")
+                        "Size of the hidden layer in the feed-forward neural "
+                        "network.")
 
 tf.flags.DEFINE_integer("num_layers", 1,
-                        "Number of layers in the model.")
+                        "Number of layers in the BiRNN encoder.")
 
 tf.flags.DEFINE_string("source_embeddings_path", None,
-                       "Pretrained embeddings to initialize the source embeddings matrix.")
+                       "Pretrained embeddings to initialize the source embeddings "
+                       "matrix.")
 
 tf.flags.DEFINE_string("target_embeddings_path", None,
-                       "Pretrained embeddings to initialize the target embeddings matrix.")
+                       "Pretrained embeddings to initialize the target embeddings "
+                       "matrix.")
 
 tf.flags.DEFINE_boolean("fix_pretrained", False,
                         "If true fix pretrained embeddings.")
@@ -87,24 +92,24 @@ tf.flags.DEFINE_integer("num_epochs", 15,
                         "Number of epochs to train the model.")
 
 tf.flags.DEFINE_integer("num_negative", 5,
-                        "Number of negative examples to sample per pair of parallel sentences "
-                        "in training dataset.")
+                        "Number of negative examples to sample per pair of "
+                        "parallel sentences in training dataset.")
 
 tf.flags.DEFINE_float("keep_prob_input", 0.8,
-                      "Keep probability for dropout applied at embedding layer.")
+                      "Keep probability for dropout applied at the embedding layer.")
 
 tf.flags.DEFINE_float("keep_prob_output", 0.7,
-                      "Keep probability for dropout applied at prediction layer.")
+                      "Keep probability for dropout applied at the prediction layer.")
 
 tf.flags.DEFINE_integer("steps_per_checkpoint", 200,
-                        "Number of steps to save a checkpoint.")
+                        "Number of steps to save a model checkpoint.")
 
 
 FLAGS = tf.flags.FLAGS
 
 
 def eval_epoch(sess, model, data_iterator, summary_writer):
-    """Evaluate dataset for one epoch."""
+    """Evaluate model for one epoch."""
     sess.run(tf.local_variables_initializer())
     num_iter = int(np.ceil(data_iterator.size / FLAGS.batch_size))
     epoch_loss = 0
@@ -112,12 +117,17 @@ def eval_epoch(sess, model, data_iterator, summary_writer):
         source, target, label = data_iterator.next_batch(FLAGS.batch_size)
         source_len = utils.sequence_length(source)
         target_len = utils.sequence_length(target)
-        feed_dict = {model.x_source: source, model.x_target: target, model.labels: label,
-                     model.source_seq_length: source_len, model.target_seq_length: target_len,
+        feed_dict = {model.x_source: source,
+                     model.x_target: target,
+                     model.labels: label,
+                     model.source_seq_length: source_len,
+                     model.target_seq_length: target_len,
                      model.decision_threshold: FLAGS.decision_threshold}
         loss_value, epoch_accuracy,\
-        epoch_precision, epoch_recall = sess.run([model.mean_loss, model.accuracy[1],
-                                                  model.precision[1], model.recall[1]],
+        epoch_precision, epoch_recall = sess.run([model.mean_loss,
+                                                  model.accuracy[1],
+                                                  model.precision[1],
+                                                  model.recall[1]],
                                                   feed_dict=feed_dict)
         epoch_loss += loss_value
         if step % FLAGS.steps_per_checkpoint == 0:
@@ -152,8 +162,9 @@ def main(_):
                                     source_vocab, target_vocab)
 
     # Read validation data set.
-    valid_data = utils.read_data(FLAGS.source_valid_path, FLAGS.target_valid_path,
-                                 source_vocab, target_vocab)
+    if FLAGS.source_valid_path and FLAGS.target_valid_path:
+        valid_data = utils.read_data(FLAGS.source_valid_path, FLAGS.target_valid_path,
+                                    source_vocab, target_vocab)
 
     # Initialize BiRNN.
     config = Config(len(source_vocab),
@@ -183,10 +194,11 @@ def main(_):
         sess.run(tf.local_variables_initializer())
 
         train_iterator = utils.TrainingIteratorRandom(parallel_data, FLAGS.num_negative)
-        valid_iterator = utils.EvalIterator(valid_data)
-
         train_summary_writer = tf.summary.FileWriter(os.path.join(FLAGS.checkpoint_dir, "train"), sess.graph)
-        valid_summary_writer = tf.summary.FileWriter(os.path.join(FLAGS.checkpoint_dir, "valid"), sess.graph)
+
+        if FLAGS.source_valid_path and FLAGS.target_valid_path:
+            valid_iterator = utils.EvalIterator(valid_data)
+            valid_summary_writer = tf.summary.FileWriter(os.path.join(FLAGS.checkpoint_dir, "valid"), sess.graph)
 
         epoch_loss = 0
         epoch_completed = 0
@@ -194,10 +206,10 @@ def main(_):
 
         num_iter = int(np.ceil(train_iterator.size / FLAGS.batch_size * FLAGS.num_epochs))
         start_time = time.time()
-        print("Training model for {} sentence pairs & validating on {} sentence pairs".
+        print("Training model on {} sentence pairs per epoch:".
             format(train_iterator.size, valid_iterator.size))
 
-        for step in xrange(100):#num_iter):
+        for step in xrange(num_iter):
             source, target, label = train_iterator.next_batch(FLAGS.batch_size)
             source_len = utils.sequence_length(source)
             target_len = utils.sequence_length(target)
@@ -235,11 +247,12 @@ def main(_):
                       .format(epoch_completed, epoch_time,
                               epoch_loss, epoch_accuracy,
                               epoch_precision, epoch_recall, epoch_f1))
-                # Save a checkpoint.
+                # Save a model checkpoint.
                 checkpoint_path = os.path.join(FLAGS.checkpoint_dir, "model.ckpt")
                 model.saver.save(sess, checkpoint_path, global_step=step)
                 # Evaluate model on the validation set.
-                eval_epoch(sess, model, valid_iterator, valid_summary_writer)
+                if FLAGS.source_valid_path and FLAGS.target_valid_path:
+                    eval_epoch(sess, model, valid_iterator, valid_summary_writer)
                 # Initialize local variables for new epoch.
                 batch_completed = 0
                 epoch_loss = 0

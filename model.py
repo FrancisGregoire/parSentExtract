@@ -2,8 +2,6 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
-from six.moves import xrange
-
 import tensorflow as tf
 
 from utils import get_pretrained_embeddings, reset_graph
@@ -26,7 +24,6 @@ class Config(object):
                  source_embeddings_path=None,
                  target_embeddings_path=None,
                  fix_pretrained=False):
-
         self.source_vocab_size = source_vocab_size
         self.target_vocab_size = target_vocab_size
         self.embedding_size = embedding_size
@@ -59,26 +56,36 @@ class BiRNN(object):
         reset_graph()
 
         # Placeholders.
-        x_source = tf.placeholder(tf.int32, [None, None],
+        x_source = tf.placeholder(tf.int32,
+                                  shape=[None, None],
                                   name="x_source")
-        source_seq_length = tf.placeholder(tf.int32, [None],
+
+        source_seq_length = tf.placeholder(tf.int32,
+                                           shape=[None],
                                            name="source_seq_length")
 
-        x_target = tf.placeholder(tf.int32, [None, None],
+        x_target = tf.placeholder(tf.int32,
+                                  shape=[None, None],
                                   name="x_target")
-        target_seq_length = tf.placeholder(tf.int32, [None],
+
+        target_seq_length = tf.placeholder(tf.int32,
+                                           shape=[None],
                                            name="target_seq_length")
 
-        labels = tf.placeholder(tf.float32, [None],
+        labels = tf.placeholder(tf.float32,
+                                shape=[None],
                                 name="labels")
 
-        input_dropout = tf.placeholder_with_default(1.0, [],
+        input_dropout = tf.placeholder_with_default(1.0,
+                                                    shape=[],
                                                     name="input_dropout")
 
-        output_dropout = tf.placeholder_with_default(1.0, [],
+        output_dropout = tf.placeholder_with_default(1.0,
+                                                     shape=[],
                                                      name="output_dropout")
 
-        decision_threshold = tf.placeholder_with_default(0.5, [],
+        decision_threshold = tf.placeholder_with_default(0.5,
+                                                         shape=[],
                                                          name="decision_threshold")
 
         # Embedding layer.
@@ -119,11 +126,14 @@ class BiRNN(object):
                 target_embeddings = tf.get_variable(
                     name="target_embeddings_matrix",
                     shape=[self.config.target_vocab_size, self.config.embedding_size])
+
             source_rnn_inputs = tf.nn.embedding_lookup(source_embeddings, x_source)
             target_rnn_inputs = tf.nn.embedding_lookup(target_embeddings, x_target)
-            source_rnn_inputs = tf.nn.dropout(source_rnn_inputs, keep_prob=input_dropout,
+            source_rnn_inputs = tf.nn.dropout(source_rnn_inputs,
+                                              keep_prob=input_dropout,
                                               name="source_seq_embeddings")
-            target_rnn_inputs = tf.nn.dropout(target_rnn_inputs, keep_prob=input_dropout,
+            target_rnn_inputs = tf.nn.dropout(target_rnn_inputs,
+                                              keep_prob=input_dropout,
                                               name="target_seq_embeddings")
 
         # BiRNN encoder.
@@ -199,18 +209,25 @@ class BiRNN(object):
             h_multiply = tf.multiply(source_final_state, target_final_state)
             h_abs_diff = tf.abs(tf.subtract(source_final_state, target_final_state))
 
-            W_1 = tf.get_variable("W_1", [self.config.state_size, self.config.hidden_size])
-            W_2 = tf.get_variable("W_2", [self.config.state_size, self.config.hidden_size])
-            b_1 = tf.get_variable("b_1", [self.config.hidden_size], initializer=tf.constant_initializer(0.0))
+            W_1 = tf.get_variable(name="W_1",
+                                  shape=[self.config.state_size, self.config.hidden_size])
+            W_2 = tf.get_variable(name="W_2",
+                                  shape=[self.config.state_size, self.config.hidden_size])
+            b_1 = tf.get_variable(name="b_1",
+                                  shape=[self.config.hidden_size],
+                                  initializer=tf.constant_initializer(0.0))
 
             h_semantic = tf.tanh(tf.matmul(h_multiply, W_1) + tf.matmul(h_abs_diff, W_2) + b_1)
 
-            W_3 = tf.get_variable("W_3", [self.config.hidden_size, 1])
-            b_2 = tf.get_variable("b_2", [1], initializer=tf.constant_initializer(0.0))
+            W_3 = tf.get_variable(name="W_3",
+                                  shape=[self.config.hidden_size, 1])
+            b_2 = tf.get_variable(name="b_2",
+                                  shape=[1],
+                                  initializer=tf.constant_initializer(0.0))
 
             logits = tf.matmul(h_semantic, W_3) + b_2
             logits = tf.squeeze(logits,
-                                name = "logits")
+                                name="logits")
 
             # Sigmoid output layer.
             with tf.name_scope("output"):
@@ -245,7 +262,7 @@ class BiRNN(object):
             train_op = optimizer.apply_gradients(zip(clipped_gradients, trainable_variables),
                                                  global_step=global_step)
 
-        # Evaluation metrics
+        # Evaluation metrics.
         accuracy = tf.metrics.accuracy(labels, predicted_class,
                                        name="accuracy")
         precision = tf.metrics.precision(labels, predicted_class,
@@ -272,7 +289,7 @@ class BiRNN(object):
             if grad is not None:
                 tf.summary.histogram(var.op.name + "/gradients", grad)
 
-        # Assign placeholders, operations, etc.
+        # Assign placeholders and operations.
         self.x_source = x_source
         self.x_target = x_target
         self.source_seq_length = source_seq_length
@@ -303,7 +320,7 @@ class BiRNN(object):
 
     def restore_variables(self, sess, checkpoint_dir):
         """Restore previously saved trainable variable weights from the
-           last checkpoint of a trained model.
+           last checkpoint found in checkpoint_dir.
         """
         checkpoint = tf.train.get_checkpoint_state(checkpoint_dir)
         if checkpoint and checkpoint.model_checkpoint_path:

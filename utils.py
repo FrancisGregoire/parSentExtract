@@ -3,7 +3,6 @@ from __future__ import division
 from __future__ import print_function
 
 import os
-import random
 import re
 
 from itertools import product
@@ -123,6 +122,7 @@ class EvalIterator(object):
             batch_data = self.epoch_data[start:end]
         return self._pad_batch(batch_data)
 
+
 class TestingIterator(object):
     """Class used to test BiRNN."""
     def __init__(self, data):
@@ -168,6 +168,7 @@ class TestingIterator(object):
             batch_data = self.data[start:end]
         return self._pad_batch(batch_data)
 
+
 def create_vocabulary(vocabulary_path, data_path, max_vocabulary_size):
     """Create vocabulary file from data file."""
     vocab = {}
@@ -199,37 +200,37 @@ def initialize_vocabulary(vocabulary_path):
 
 
 def sentence_to_token_ids(sentence, vocabulary, max_sequence_length):
-    """Convert a string to list of integers representing token-ids."""
+    """Convert a string to a list of integers representing token-ids."""
     words = sentence.strip().split()
     if len(words) > max_sequence_length:
         words = words[:max_sequence_length]
     return [vocabulary.get(w, UNK_ID) for w in words]
 
 
-def read_paths(data_path):
-    with open(data_path, "r", encoding="utf-8") as paths_file:
-        return [path.strip() for path in paths_file.readlines()]
-
-
-def read_data(source_path, target_path, source_vocab, target_vocab, labels_path=None, max_seq_length=200):
-    """Read data from disk."""
+def read_data(source_path, target_path, source_vocab, target_vocab, max_seq_length=200):
+    """Read data from disk and convert to token ids."""
     data = []
-    if labels_path:
-        with open(source_path, mode="r", encoding="utf-8") as source_file:
-            with open(target_path, mode="r", encoding="utf-8") as target_file:
-                with open(labels_path, mode="r", encoding="utf-8") as labels_file:
-                    for source, target, label in zip(source_file, target_file, labels_file):
-                        source_data = sentence_to_token_ids(source, source_vocab, max_seq_length)
-                        target_data = sentence_to_token_ids(target, target_vocab, max_seq_length)
-                        data.append((source_data, target_data, int(label)))
-    else:
-        with open(source_path, mode="r", encoding="utf-8") as source_file:
-            with open(target_path, mode="r", encoding="utf-8") as target_file:
-                for source, target in zip(source_file, target_file):
-                    source_data = sentence_to_token_ids(source, source_vocab, max_seq_length)
-                    target_data = sentence_to_token_ids(target, target_vocab, max_seq_length)
-                    data.append((source_data, target_data))
+    with open(source_path, mode="r", encoding="utf-8") as source_file:
+        with open(target_path, mode="r", encoding="utf-8") as target_file:
+            for source, target in zip(source_file, target_file):
+                source_data = sentence_to_token_ids(source, source_vocab, max_seq_length)
+                target_data = sentence_to_token_ids(target, target_vocab, max_seq_length)
+                data.append((source_data, target_data))
     return np.array(data, dtype=object)
+
+
+def read_data_with_ref(source_path, target_path, ref_path):
+    """Read sentences and parallel sentence references."""
+    with open(source_path, "r", encoding="utf-8") as source_file,\
+         open(target_path, "r", encoding="utf-8") as target_file:
+            source_lines = [l for l in source_file]
+            target_lines = [l for l in target_file]
+    references = set()
+    with open(ref_path, mode="r", encoding="utf-8") as ref_file:
+        for l in ref_file:
+            i, j = l.split()
+            references.add((int(i), int(j)))
+    return source_lines, target_lines, references
 
 
 def sequence_length(sequence):
@@ -265,8 +266,10 @@ def read_pretrained_embeddings(embeddings_path, vocabulary):
 def get_pretrained_embeddings(source_embeddings_path, target_embeddings_path,
                               source_vocabulary, target_vocabulary, normalize=True):
     """"Wrapper to read source and target pretrained word embeddings."""
-    source_pretrained_embeddings = read_pretrained_embeddings(source_embeddings_path, source_vocabulary)
-    target_pretrained_embeddings = read_pretrained_embeddings(target_embeddings_path, target_vocabulary)
+    source_pretrained_embeddings = read_pretrained_embeddings(source_embeddings_path,
+                                                              source_vocabulary)
+    target_pretrained_embeddings = read_pretrained_embeddings(target_embeddings_path,
+                                                              target_vocabulary)
     if normalize:
         pretrained_embeddings = np.vstack((source_pretrained_embeddings, target_pretrained_embeddings))
         normed_pretrained_embeddings = l2_normalize(pretrained_embeddings)
@@ -278,17 +281,6 @@ def get_pretrained_embeddings(source_embeddings_path, target_embeddings_path,
 def f1_score(precision, recall):
     """Calculate the F1 score."""
     return (2 * precision * recall) / (precision + recall + EPSILON)
-
-
-def pad_sequences(data):
-    seq_length = np.array([(len(source), len(target)) for source, target in data])
-    max_length = np.max(seq_length, axis=0)
-    pad_source = np.zeros((len(data), max_length[0]), dtype=np.int32)
-    pad_target = np.zeros((len(data), max_length[1]), dtype=np.int32)
-    for i, (source, target) in enumerate(data):
-        pad_source[i, :seq_length[i, 0]] = source
-        pad_target[i, :seq_length[i, 1]] = target
-    return pad_source, pad_target
 
 
 def top_k(source, targets, k=1):
@@ -315,6 +307,6 @@ def restore_model(sess, checkpoint_dir):
 
 def reset_graph():
     """Close unclosed sessions and reset graph."""
-    if 'sess' in globals() and sess:
+    if "sess" in globals() and sess:
         sess.close()
     tf.reset_default_graph()
