@@ -7,7 +7,7 @@ A TensorFlow implementation of the bidirectional RNN model described in the pape
 * scikit-learn ([instructions](http://scikit-learn.org/stable/install.html))
 
 ##Prepare the training data
-We have provided a script to tokenize and clean your datasets using Moses.
+We have provided a script to tokenize and clean your datasets using [Moses](https://github.com/moses-smt/mosesdecoder).
 ```
 ./scripts/preprocessing.sh ~/moses/mosesdecoder ../data/train en fr 3 80
 mv ../data/train.clean.en ../data/train.en
