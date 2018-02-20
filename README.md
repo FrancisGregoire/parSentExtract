@@ -27,3 +27,9 @@ Run the evaluation script.
 python eval.py --checkpoint_dir ../tflogs --source_test_path ../data/test.en --target_test_path ../data/test.fr --reference_test_path ../data/test.ref --source_vocab_path ../data/vocabulary.source --target_vocab_path ../data/vocabulary.target
 ```
 The evaluation is done on the last model saved in `checkpoint_dir`.
+
+## Extracting sentence pairs
+Run the sentence extraction script.
+```
+python extract.py --checkpoint_dir ../tflogs --extract_dir ./samples --source_vocab_path ../data/vocabulary.source --target_vocab_path ../data/vocabulary.target --source_output_path ../data/extracted.source --target_output_path ../data/extracted.target --score_output_path ../data/extracted.score --source_language en --target_language fr --decision_threshold 0.99
+```
