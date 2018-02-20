@@ -49,7 +49,7 @@ FLAGS = tf.flags.FLAGS
 
 
 def inference(sess, data_iterator, probs_op, placeholders):
-    """Get the predicted class {0, 1} of the examples in a test set."""
+    """Get the predicted class {0, 1} of given sentence pairs."""
     x_source, source_seq_length,\
     x_target, target_seq_length,\
     labels = placeholders
@@ -79,11 +79,13 @@ def evaluate(sess, source_sentences, target_sentences, references,
     """"Evalute BiRNN at decision threshold value maximizing the area
         under the precison-recall curve.
     """
-    pairs = [(i, j) for i, j in product(range(len(source_sentences)), range(len(target_sentences)))]
+    pairs = [(i, j) for i, j in product(range(len(source_sentences)),
+                                        range(len(target_sentences)))]
 
     data = [(source_sentences_ids[i], target_sentences_ids[j], 1.0) if (i, j) in references
             else (source_sentences_ids[i], target_sentences_ids[j], 0.0)
-            for i, j in product(range(len(source_sentences)), range(len(target_sentences)))]
+            for i, j in product(range(len(source_sentences)),
+                                range(len(target_sentences)))]
 
     data_iterator = utils.TestingIterator(np.array(data, dtype=object))
 

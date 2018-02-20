@@ -20,7 +20,7 @@ UNK_ID = 1
 NORMALIZE_DIGIT = re.compile("\d")
 
 
-class TrainingIteratorRandom(object):
+class TrainingIterator(object):
     """Class used to train BiRNN."""
     def __init__(self, data, n_negative=1):
         self.data = data
@@ -132,24 +132,15 @@ class TestingIterator(object):
         self._index_in_epoch = 0
         self.size = len(self.data)
 
-    def _sequence_length(self, data):
-        length = np.zeros((len(data), 2), dtype=np.int32)
-        for i, data_i in enumerate(data):
-            source, target, _ = data_i
-            length[i] = (len(source), len(target))
-        return length
-
     def _pad_batch(self, data):
-        batch_size = len(data)
-        batch_sequence_length = self._sequence_length(data)
-        max_sequence_length = np.max(batch_sequence_length, axis=0)
-        source, target, label = np.hsplit(data, 3)
-        pad_source = np.zeros((batch_size, max_sequence_length[0]), dtype=np.int32)
-        pad_target = np.zeros((batch_size, max_sequence_length[1]), dtype=np.int32)
-        for i in xrange(batch_size):
-            pad_source[i, :batch_sequence_length[i, 0]] = source[i, 0]
-            pad_target[i, :batch_sequence_length[i, 1]] = target[i, 0]
-        return pad_source, pad_target, np.squeeze(label)
+        seq_length = np.array([(len(source), len(target)) for (source, target, _) in data])
+        max_length = np.max(seq_length, axis=0)
+        pad_source = np.zeros((len(data), max_length[0]), dtype=np.int32)
+        pad_target = np.zeros((len(data), max_length[1]), dtype=np.int32)
+        for i, (source, target, _) in enumerate(data):
+            pad_source[i, :seq_length[i, 0]] = source
+            pad_target[i, :seq_length[i, 1]] = target
+        return pad_source, pad_target, data[:, 2]
 
     def next_batch(self, batch_size):
         self.global_step += 1
@@ -208,10 +199,10 @@ def sentence_to_token_ids(sentence, vocabulary, max_sequence_length):
 
 
 def read_data(source_path, target_path, source_vocab, target_vocab, max_seq_length=200):
-    """Read data from disk and convert to token ids."""
+    """Read parallel data and convert to token ids."""
     data = []
-    with open(source_path, mode="r", encoding="utf-8") as source_file:
-        with open(target_path, mode="r", encoding="utf-8") as target_file:
+    with open(source_path, mode="r", encoding="utf-8") as source_file,\
+         open(target_path, mode="r", encoding="utf-8") as target_file:
             for source, target in zip(source_file, target_file):
                 source_data = sentence_to_token_ids(source, source_vocab, max_seq_length)
                 target_data = sentence_to_token_ids(target, target_vocab, max_seq_length)

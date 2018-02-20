@@ -1,0 +1,82 @@
+Algèbre linéaire
+L’algèbre linéaire est la branche des mathématiques qui s' intéresse à l' étude des espaces vectoriels et des transformations linéaires , formalisation générale des théories des systèmes d' équations linéaires .
+Histoire .
+L' histoire de l' algèbre linéaire commence avec Al-Khawarizmi qui a traduit des textes de mathématiques indiens , réinterprété les travaux de l' école grecque et qui est la source du développement conscient de l' algèbre qui s' étendra pendant des siècles après lui .
+Elle a été reprise par René Descartes qui pose des problèmes de géométrie , comme la détermination de l' intersection de deux droites , en termes d' équation linéaire , établissant dès lors un pont entre deux branches mathématiques jusqu'alors séparées : l' algèbre et la géométrie .
+S' il ne définit pas la notion de base de l' algèbre linéaire qu' est celle d' espace vectoriel , il l' utilise déjà avec succès , et cette utilisation naturelle des aspects linéaires des équations manipulées demeurera utilisé de manière ad hoc , fondé essentiellement sur les idées géométriques sous-jacentes .
+Après cette découverte , les progrès en algèbre linéaire vont se limiter à des études ponctuelles comme la définition et l' analyse des premières propriétés des déterminants par Jean d' Alembert .
+Ce n' est qu' au que l' algèbre linéaire devient une branche des mathématiques à part entière .
+Carl Friedrich Gauss trouve une méthode générique pour la résolution des systèmes d' équations linéaires et Camille Jordan résout définitivement le problème de la réduction d' endomorphisme .
+En 1843 , William Rowan Hamilton ( inventeur du terme " vector " ) découvre les quaternions ( extension du corps des nombres complexes ) .
+En 1844 , Hermann Grassmann publie son traité " Die lineale Ausdehnungslehre " , " La théorie de l' extension linéaire " , qui est la première tentative de formalisation générale de la notion d' espace vectoriel .
+Si son œuvre reste grandement inaperçue , elle contient l' essentiel des idées modernes de l' algèbre linéaire , et cette étape fondamentale dans le développement de l' algèbre linéaire est reconnue comme telle tant par Hamilton que par Giuseppe Peano , qui axiomatise entièrement la théorie en 1888 .
+Les espaces vectoriels deviennent alors une structure générale omniprésente dans presque tous les domaines mathématiques , notamment en analyse ( espaces de fonctions ) .
+Intérêt .
+Sous leur forme la plus simple , les applications linéaires dans les espaces vectoriels représentent intuitivement les déplacements dans les espaces géométriques élémentaires comme la droite , le plan ou notre espace physique .
+Les bases de cette théorie remplacent maintenant la représentation construite par Euclide au .
+La construction moderne permet de généraliser la notion d' espace à des dimensions quelconques .
+L' algèbre linéaire permet de résoudre tout un ensemble d' équations dites linéaires utilisées non seulement en mathématiques ou en mécanique , mais dans de nombreuses autres branches comme les sciences naturelles ou les sciences sociales .
+Les espaces vectoriels forment aussi un outil fondamental pour les sciences de l' ingénieur et servent de base à de nombreux domaines dans la recherche opérationnelle .
+Enfin , c' est un outil utilisé en mathématiques dans des domaines aussi divers que la théorie des groupes , des anneaux ou des corps , l' analyse fonctionnelle , la géométrie différentielle ou la théorie des nombres .
+Présentation élémentaire .
+L' algèbre linéaire commence par l' étude de vecteurs dans les espaces cartésiens de dimension 2 et 3 .
+Un vecteur , ici , est une classe d' équivalence de bipoints qui unifie les segments de droite caractérisés à la fois par leur longueur ( ou " norme " ) , leur direction et leur sens : deux bipoints représentent un même vecteur si le quadrilatère formé sur les quatre points est un parallélogramme .
+Les vecteurs peuvent alors être utilisés pour représenter certaines entités physiques comme des déplacements , additionnés entre eux ou encore multipliés par des scalaires ( " nombres " ) , formant ainsi le premier exemple concret d' espace vectoriel .
+L' algèbre linéaire moderne s' intéresse beaucoup aux espaces de dimension arbitraire , éventuellement infinie .
+La plupart des résultats obtenus en dimension 2 ou 3 peuvent être étendus aux dimensions finies supérieures .
+Les vecteurs étant des listes ordonnées à n composantes , on peut manipuler ces données efficacement dans cet environnement .
+Par exemple en économie , on peut créer et utiliser des vecteurs à huit dimensions pour représenter le produit national brut de huit pays .
+Quelques théorèmes .
+D'autres théorèmes concernent les conditions d' inversion de matrices de divers types :
+Un théorème intéressant à l' époque des mémoires d' ordinateurs de petite taille était qu' on pouvait travailler séparément sur des sous-ensembles ( « blocs » ) d' une matrice en les combinant ensuite par les mêmes règles qu' on utilise pour combiner des scalaires dans les matrices ( " cf " .
+l’article Matrice par bloc ) .
+Avec les mémoires actuelles de plusieurs gigaoctets , cette question a perdu un peu de son intérêt pratique , mais reste très prisée en théorie des nombres , pour la décomposition en produit de facteurs premiers avec le crible général de corps de nombres ( GNFS ) ( " méthode Lanczos par blocs " ) .
+Utilisations .
+Les espaces vectoriels forment le support et le fondement de l' algèbre linéaire .
+Ils sont aussi présents dans de nombreux domaines distincts .
+S' il n' est pas possible d' indiquer ici tous les cas d' utilisation , on peut tout de même citer pour les principales structures objet de théories , des exemples significatifs .
+Leurs rôles dans de vastes théories ne traitant pas d' une structure particulière , comme celles des nombres algébriques ou de Galois peuvent aussi être évoqués .
+Les espaces vectoriels utilisés sont d' une grande diversité .
+On y trouve les classiques espaces vectoriels de dimension 2 ou 3 sur les nombres réels , cependant la dimension peut être quelconque , même infinie .
+Les nombres complexes sont aussi très utilisés , ainsi que les rationnels .
+Il n' est pas rare qu' une partie des nombres réels ou complexes soit considéré comme un espace vectoriel rationnel .
+Le corps de base peut aussi contenir un nombre fini d' éléments , définissant parfois un espace vectoriel fini .
+Les propriétés géométriques de la structure permettent la démonstration de nombreux théorèmes .
+Elles ne se limitent pas aux cas où l' espace est réel , même dans le cas de corps plus insolites comme les corps finis ou les extensions finies des rationnels , les propriétés géométriques s' avèrent parfois essentielles .
+Groupe fini .
+La classification des groupes finis est une vaste question , encore objet de recherche .
+Si le groupe contient un petit nombre d' éléments , les théorèmes de Sylow peuvent suffire pour en déterminer la structure .
+Une méthode beaucoup plus puissante est nécessaire dans le cas général .
+Georg Frobenius , à la suite de travaux de Richard Dedekind , développe une nouvelle théorie en 1896 .
+Elle se fonde sur l' idée que l' ensemble des symétries d' un espace vectoriel possède une structure de groupe .
+Il est toujours possible de " représenter " un groupe fini par des symétries bien choisies sur un espace vectoriel de dimension suffisante .
+Un groupe est ainsi incarné par des transformations géométriques simples .
+Une telle incarnation prend le nom de " représentation d' un groupe " .
+Les espaces vectoriels choisis sont de dimension finie , en général sur le corps des complexes , cependant pour disposer de bonnes propriétés arithmétiques le corps peut être celui des rationnels ou encore utiliser des entiers algébriques comme pour la démonstration du théorème de Burnside sur les groupes résolubles .
+Richard Brauer étudie un cas très abstrait , celui des représentations sur un espace vectoriel construit à l' aide d' un corps fini .
+Un exemple relativement simple d' utilisation de cette théorie est donné par Burnside , avec son théorème sur les sous-groupes d' exposant fini du groupe linéaire GL( " n " , ℂ ) .
+Anneau .
+Un exemple célèbre d' anneau disposant aussi d' une structure d' espace vectoriel est celui des polynômes à coefficients dans un corps .
+Cet espace vectoriel , de dimension infinie , est largement utilisé en algèbre linéaire , à travers par exemple le polynôme minimal ou caractéristique .
+Le morphisme canonique entre les polynômes et les applications linéaires d' un espace vectoriel est à l' origine d' une structure d' algèbre qui est un anneau , si la multiplication externe est " oubliée " .
+Cette méthode permet d' élucider la structure de certains anneaux .
+Tout anneau est un espace vectoriel sur ceux de ses sous-anneaux qui sont des corps .
+L' espace vectoriel ressemble à la structure développée par Grassman .
+Cette remarque est utilisée au début du , en particulier par Emil Artin et Emmy Noether , pour élucider cette structure dans le cas des anneaux artiniens et noethériens , qui sont des copies de sous-algèbres sur un espace vectoriel construit sur sous-anneau qui s' avère être un corps .
+Un exemple est la généralisation d' un théorème de Wedderburn par Artin et portant maintenant le nom de théorème d' Artin-Wedderburn .
+Il est important en algèbre non commutative .
+Ce théorème permet , par exemple , de construire le corps des quaternions à l' aide d' une représentation du groupe associé sur un espace vectoriel réel de dimension 4
+Théorie de Galois .
+La théorie de Galois contient de nombreux exemples d' espaces vectoriels .
+Elle consiste à étudier un corps comme un espace vectoriel sur un sous-corps .
+Ainsi chaque sous-corps permet de considérer la structure initiale comme un espace vectoriel particulier .
+Un exemple d' application est celui des figures constructible à la règle et au compas .
+Ces points forment un corps disposant d' une structure d' espace vectoriel sur les nombres rationnels .
+Il est de dimension infinie et , pour chaque points , le plus petit sous-corps le contenant est de dimension finie égale à une puissance de 2 .
+Un tel sous-corps est appelé une tour d' extensions quadratiques .
+Cette propriété de ces espaces vectoriels permet de résoudre d' antiques conjectures comme la duplication du cube , la trisection de l' angle ou la construction d' un polygone régulier .
+L' exemple historique de la théorie est celui de la résolution d' une équation polynomiale .
+Le théorème d' Abel donne une condition nécessaire et suffisante de résolution par radicaux .
+Les espaces vectoriels utilisés ont pour éléments ceux du plus petit corps " L " contenant tous les coefficients du polynôme ainsi que ses racines et le corps sous-jacent est un sous-corps " K " du premier contenant tous les coefficients .
+Le groupe de Galois est composé des automorphismes du corps " L " et laissant invariant le corps " K " .
+Il correspond à un nombre fini de symétries de l' espace vectoriel .
