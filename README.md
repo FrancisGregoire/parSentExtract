@@ -11,7 +11,7 @@ We have provided a script to tokenize and clean your datasets using [Moses](http
 ```
 ./scripts/preprocessing.sh ~/moses/mosesdecoder ../data/train en fr 3 80
 mv ../data/train.clean.en ../data/train.en
-mv ../data/trainclean.fr ../data/train.fr
+mv ../data/train.clean.fr ../data/train.fr
 ```
 
 ## Training
