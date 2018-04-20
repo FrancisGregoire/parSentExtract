@@ -193,7 +193,7 @@ def main(_):
         sess.run(tf.global_variables_initializer())
         sess.run(tf.local_variables_initializer())
 
-        train_iterator = utils.TrainingIteratorRandom(parallel_data, FLAGS.num_negative)
+        train_iterator = utils.TrainingIterator(parallel_data, FLAGS.num_negative)
         train_summary_writer = tf.summary.FileWriter(os.path.join(FLAGS.checkpoint_dir, "train"), sess.graph)
 
         if FLAGS.source_valid_path and FLAGS.target_valid_path:
