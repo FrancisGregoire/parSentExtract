@@ -1,5 +1,6 @@
-# A Deep Neural Network Approach To Parallel Sentence Extraction
-A TensorFlow implementation of the bidirectional RNN model described in the paper [A Deep Neural Network Approach To Parallel Sentence Extraction](https://arxiv.org/abs/1709.09783) to extract parallel sentences from aligned comparable corpora.
+# Extracting Parallel Sentences with Bidirectional Recurrent Neural Networks to Improve Machine Translation
+A TensorFlow implementation of the bidirectional RNN model described in the paper [Extracting Parallel Sentences with Bidirectional Recurrent Neural Networks to Improve Machine Translation
+](https://arxiv.org/abs/1806.05559) to extract parallel sentences from aligned comparable corpora.
 
 ## Required packages
 * **TensorFlow** ([instructions](https://www.tensorflow.org/install/))
