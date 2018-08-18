@@ -181,8 +181,8 @@ class BiRNN(object):
             self.config.state_size *= 2
             # Mean and max pooling only work for 1 layer BiRNN.
             if self.config.use_mean_pooling:
-                source_final_state = self.average_pooling(source_rnn_outputs, source_seq_length)
-                target_final_state = self.average_pooling(target_rnn_outputs, target_seq_length)
+                source_final_state = self.mean_pooling(source_rnn_outputs, source_seq_length)
+                target_final_state = self.mean_pooling(target_rnn_outputs, target_seq_length)
             elif self.config.use_max_pooling:
                 source_final_state = self.max_pooling(source_rnn_outputs)
                 target_final_state = self.max_pooling(target_rnn_outputs)
